@@ -86,7 +86,16 @@ function(piz_add_to_installer target)
           "${dst_folder}/${vst3_name}/Contents/${JUCE_TARGET_ARCHITECTURE}-linux"
       )
     else()
-      set(destination "${format}/${CPACK_PACKAGE_VENDOR}")
+      # For non-Linux VST3 and all other formats, choose the subfolder under
+      # GLOBAL_PLUGIN_INSTALL_PREFIX. Special-case AU on macOS to use
+      # "Components" instead of a folder named after the format.
+      if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND format STREQUAL "AU")
+        # On macOS, Audio Units live under "Components" instead of a folder
+        # named after the format. Map AU to the Components directory.
+        set(destination "Components/${CPACK_PACKAGE_VENDOR}")
+      else()
+        set(destination "${format}/${CPACK_PACKAGE_VENDOR}")
+      endif()
     endif()
 
     install(
