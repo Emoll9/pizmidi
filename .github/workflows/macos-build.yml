@@ -1,0 +1,35 @@
+name: Build pizmidi macOS
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Install CMake + Ninja on the runner
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Configure (CMake preset)
+        run: cmake -S . --preset=mac-native
+
+      - name: Build
+        run: cmake --build --preset=mac-native --parallel
+
+      - name: Package
+        run: cmake --build --preset=mac-native --parallel --target package
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pizmidi-mac-pkg
+          path: build/mac-native/packages/*.pkg
