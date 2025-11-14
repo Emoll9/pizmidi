@@ -59,7 +59,7 @@ function(piz_add_plugin target)
     # Plugin specifics:
     ${ARGN}
     # Common values:
-    FORMATS VST3
+    FORMATS VST3 AU
     NEEDS_CURL TRUE
     COMPANY_NAME "Pizeo"
     PLUGIN_MANUFACTURER_CODE "Pzeo")
